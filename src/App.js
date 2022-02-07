@@ -1,10 +1,10 @@
-import { Component } from 'react/cjs/react.production.min';
+import { Component, PureComponent } from 'react/cjs/react.production.min';
 import './App.css';
 import ContactList from './components/contactList/ContactList';
 import Filter from './components/Filter/Filter';
 import Form from './components/form/Form';
 
-class App extends Component {
+class App extends PureComponent {
   state = {
     contacts: [
       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -14,6 +14,23 @@ class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const storageData = localStorage.getItem('contacts');
+    const parsedStorageData = JSON.parse(storageData);
+
+    if (parsedStorageData) {
+      this.setState({
+        contacts: parsedStorageData,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   plusContactState = contact => {
     if (

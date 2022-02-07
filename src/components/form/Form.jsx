@@ -1,7 +1,7 @@
-import { Component } from 'react/cjs/react.production.min';
+import { Component, PureComponent } from 'react/cjs/react.production.min';
 import shortid from 'shortid';
 
-class Form extends Component {
+class Form extends PureComponent {
   state = {
     name: '',
     number: '',
