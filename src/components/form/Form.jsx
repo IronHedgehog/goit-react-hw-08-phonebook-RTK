@@ -1,19 +1,17 @@
 import { useState } from 'react';
-import shortid from 'shortid';
+import { useDispatch, useSelector } from 'react-redux';
+import actions from '../../redux/phonebook/phonebook-actions';
+import { getContacts } from '../../redux/phonebook/phonebook-selector';
 
-const Form = ({ plusContactState }) => {
-  // state = {
-  //   name: '',
-  //   number: '',
-  // };
+const Form = () => {
+  const contacts = useSelector(getContacts);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
+  const dispatch = useDispatch();
   const handleChange = e => {
     const { name, value } = e.target;
-    // this.setState({
-    //   [name]: value,
-    // });
+
     switch (name) {
       case 'name':
         setName(value);
@@ -28,13 +26,17 @@ const Form = ({ plusContactState }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    const contact = {
-      name,
-      number,
-      id: shortid(),
-    };
-    plusContactState(contact);
-    // this.setState({ name: '', number: '' });
+
+    if (
+      contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      // eslint-disable-next-line no-useless-concat
+      alert(`${name}` + ' is already in contacts');
+    } else {
+      dispatch(actions.addContact(name, number));
+    }
     setName('');
     setNumber('');
   };

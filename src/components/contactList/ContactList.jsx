@@ -1,18 +1,13 @@
 import PropTypes from 'prop-types';
 import ContactItem from './contactsItem/ContactsItem';
 
-const ContactList = ({ contacts, deleteContact }) => {
+const ContactList = () => {
   return (
     <>
       <ul>
-        <ContactItem contacts={contacts} deleteContact={deleteContact} />
+        <ContactItem />
       </ul>
     </>
   );
 };
 export default ContactList;
-
-ContactList.propTypes = {
-  contacts: PropTypes.array.isRequired,
-  deleteContact: PropTypes.func.isRequired,
-};
