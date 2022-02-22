@@ -1,31 +1,34 @@
 import PropTypes from 'prop-types';
-import {
-  getVisibleContacts,
-} from '../../../redux/phonebook/phonebook-selector';
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../../../redux/phonebook/phonebook-actions';
+import { useDeleteContactMutation } from '../../../redux/phonebook/phonebookSlice';
+import { ThreeDots } from 'react-loader-spinner';
 
-const ContactItem = () => {
-  const contacts = useSelector(getVisibleContacts);
-  const dispatch = useDispatch();
+const ContactItem = ({ id, name, number }) => {
+  const [deleteContact, { isLoading }] = useDeleteContactMutation();
+
   return (
-    <>
-      {contacts.map(({ id, name, number }) => {
-        return (
-          <li key={id}>
-            <p name={name}>
-              {name}: {number}
-            </p>
-            <button
-              type="button"
-              onClick={() => dispatch(actions.deleteContact(id))}
-            >
-              Delete
-            </button>
-          </li>
-        );
-      })}
-    </>
+    <li>
+      <p name={name}>
+        {name}: {number}
+      </p>
+      <button
+        disabled={isLoading}
+        type="button"
+        onClick={() => deleteContact(id)}
+      >
+        {isLoading ? (
+          <ThreeDots color="#ff0000" height={20} width={20} />
+        ) : (
+          'Delete'
+        )}
+      </button>
+    </li>
   );
 };
+
 export default ContactItem;
+
+ContactItem.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  phone: PropTypes.string.isRequired,
+};

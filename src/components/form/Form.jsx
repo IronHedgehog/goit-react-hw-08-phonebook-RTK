@@ -1,14 +1,13 @@
+import PropTypes from 'prop-types';
+import Notiflix from 'notiflix';
+import { Oval } from 'react-loader-spinner';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import actions from '../../redux/phonebook/phonebook-actions';
-import { getContacts } from '../../redux/phonebook/phonebook-selector';
+import { useAddContactMutation } from '../../redux/phonebook/phonebookSlice';
 
-const Form = () => {
-  const contacts = useSelector(getContacts);
+const Form = ({ contacts }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
-  const dispatch = useDispatch();
+  const [addContact, { isLoading }] = useAddContactMutation();
   const handleChange = e => {
     const { name, value } = e.target;
 
@@ -35,7 +34,13 @@ const Form = () => {
       // eslint-disable-next-line no-useless-concat
       alert(`${name}` + ' is already in contacts');
     } else {
-      dispatch(actions.addContact(name, number));
+      const user = {
+        name,
+        number,
+      }
+      console.log(name, number);
+      addContact(user);
+      Notiflix.Notify.success(`${name}     ${number} added to phonebook`);
     }
     setName('');
     setNumber('');
@@ -77,3 +82,7 @@ const Form = () => {
 };
 
 export default Form;
+
+Form.propTypes = {
+  contacts: PropTypes.array.isRequired,
+};
